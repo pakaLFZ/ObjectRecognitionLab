@@ -1,49 +1,59 @@
-import json
+import json, pickle
 import csv
 from getFilenameList import GetFilesInFolder
 from imageVectorize import process_image
 from getDataFromCSV import getDataFromCSV
+from splitList import splitList
+import random
 import pandas as pd
 table = pd.read_csv("dataset.csv")
 
-imageLocation = "../images/"
-imagesList = GetFilesInFolder(imageLocation)
+imageLocation = "../img/"
+imagesList_main = GetFilesInFolder(imageLocation)
+random.shuffle(imagesList_main)
 
 
-imagesList = imagesList[:5000]
+filenames = table.iloc[:, 0].tolist()
+imagesList_main = splitList(filenames, 100)
 
-X = []
-Y = []
+dataId = 0
+for batchNo in range(20):
+    print(f"Processing batch {batchNo} ({len(imagesList_main)} batches in total)")
+    imagesList = imagesList_main[batchNo]
+    X = []
+    Y = []
+    for id in range(len(imagesList)):
+        image = imagesList[id]
+        if image.find(".jpg") == -1:
+            continue   
 
-for id in range(len(imagesList)):
-    image = imagesList[id]
-    if image.find(".jpg") == -1:
-        continue
+        y = getDataFromCSV(table, image)
+        if not y:
+            continue
+        y = [float(i) for i in y]
+        Y.append(y)
 
+        x = process_image(imageLocation+image, 128)
+        X.append(x.tolist())
 
+        if id % 50 == 0:
+            percentage = (id/len(imagesList)) * 100
+            percentage = round(percentage, 2)
+            print(f"{id} / {len(imagesList)}  |  {percentage}")
     
 
-    y = getDataFromCSV(table, image)
-    if not y:
-        continue
-    y = [float(i) for i in y]
-    Y.append(y)
+    log = open(f"data/X_{dataId}.pickle", "w")
+    log.write(json.dumps(X))
+    log.flush()
+    log.close()
 
-    x = process_image(imageLocation+image)
-    X.append(x.tolist())
+    log = open(f"data/Y_{dataId}.pickle", "w")
+    log.write(json.dumps(Y))
+    log.flush()
+    log.close()
 
-    if id % 500 == 0:
-        percentage = (id/len(imagesList)) * 100
-        percentage = round(percentage, 2)
-        print(f"{id} / {len(imagesList)}  |  {percentage}")
 
-log = open("X.json", "w")
-log.write(json.dumps(X))
-log.flush()
-
-log = open("Y.json", "w")
-log.write(json.dumps(Y))
-log.flush()
+    dataId += 1
 
 
 print("done")

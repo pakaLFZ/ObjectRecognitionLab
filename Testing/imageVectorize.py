@@ -1,12 +1,12 @@
 from PIL import Image
 import numpy as np
 
-def process_image(filename):
+def process_image(filename, size=128):
     # Open the image file
     img = Image.open(filename)
     
     # Resize the image to 64x64
-    img = img.resize((64, 64))
+    img = img.resize((size, size))
     
     # Convert the image to a 64x64x3 matrix
     img_matrix = np.array(img)

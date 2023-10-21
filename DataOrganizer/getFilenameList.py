@@ -19,3 +19,12 @@ def GetFilesInFolder(folder_path):
             file_list.append(file)
     
     return file_list
+
+def ListEveryFile(directory):
+    dataList = []
+    for root, _, files in os.walk(directory):
+        for file in files:
+            file_path = os.path.join(root, file)
+            dataList.append([file_path, file])
+    return dataList
+

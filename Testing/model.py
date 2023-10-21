@@ -5,13 +5,14 @@ import numpy as np
 class Model():
     def __init__(self):
         self.model = keras.Sequential([
-            keras.layers.Conv2D(32, (3,3), activation='relu',input_shape=(64,64,3)),
+            keras.layers.Input(shape=(128, 128, 3)),  # Input layer with the desired shape
+            keras.layers.Conv2D(32, (3, 3), activation='relu'),
             keras.layers.MaxPooling2D((2, 2)),
-            keras.layers.Conv2D(64, (3,3), activation='relu'),
+            keras.layers.Conv2D(64, (3, 3), activation='relu'),
             keras.layers.MaxPooling2D((2, 2)),
             keras.layers.Flatten(),
             keras.layers.Dense(128, activation='relu'),
-            keras.layers.Dense(10, activation='sigmoid')
+            keras.layers.Dense(2, activation='sigmoid')
         ])
 
         # compile the model
@@ -28,15 +29,7 @@ class Model():
         )
 
         self.fields = [
-            "Cardboard", 
-            "Glass", 
-            "Metal", 
-            "Paper", 
-            "Plastic", 
-            "Trash", 
-            "GarbageBag",
-            "PaperBag",
-            "PlasticBag",
+            "Garbage",
             "Null"
         ]
 
