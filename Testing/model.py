@@ -12,13 +12,14 @@ class Model():
             keras.layers.MaxPooling2D((2, 2)),
             keras.layers.Flatten(),
             keras.layers.Dense(128, activation='relu'),
-            keras.layers.Dense(2, activation='sigmoid')
+            keras.layers.Dense(4, activation='sigmoid')
         ])
 
         # compile the model
         self.model.compile(
             optimizer='adam',
-            loss=tf.keras.losses.BinaryCrossentropy(),
+            # loss=tf.keras.losses.CategoricalCrossentropy, #Cross
+            loss=tf.keras.losses.BinaryCrossentropy(), #Cross
             metrics=['accuracy']
         )
 
@@ -29,7 +30,9 @@ class Model():
         )
 
         self.fields = [
-            "Garbage",
+            "GarbageBag",
+            "PlasticBag",
+            "PaperBag",
             "Null"
         ]
 

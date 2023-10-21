@@ -7,7 +7,7 @@ model = Model()
 model.load()
 
 def TestImg(filename="test.jpg"):
-    image = process_image("test.jpg", 128)
+    image = process_image(filename, 128)
     score, prediction = model.predict(image)
     print(f"This is a {prediction}", score)
 

@@ -17,7 +17,7 @@ filenames = table.iloc[:, 0].tolist()
 imagesList_main = splitList(filenames, 100)
 
 dataId = 0
-for batchNo in range(20):
+for batchNo in range(len(imagesList_main)):
     print(f"Processing batch {batchNo} ({len(imagesList_main)} batches in total)")
     imagesList = imagesList_main[batchNo]
     X = []
@@ -32,9 +32,11 @@ for batchNo in range(20):
             continue
         y = [float(i) for i in y]
         Y.append(y)
-
-        x = process_image(imageLocation+image, 128)
-        X.append(x.tolist())
+        try:
+            x = process_image(imageLocation+image, 128)
+            X.append(x.tolist())
+        except:
+            continue
 
         if id % 50 == 0:
             percentage = (id/len(imagesList)) * 100
